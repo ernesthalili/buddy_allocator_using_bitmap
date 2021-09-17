@@ -1,15 +1,15 @@
-#include "BuddyAllocator.h"
+#include "Buddy_Allocator.h"
 
 
 int BuddyAllocator_calcSize(int num_levels){
 		
     int num_items=(1<<(num_levels+1));
-    int list_alloc_size = (sizeof(Buddy_item)+sizeof(DATA_MAX))*num_items;
+    int list_alloc_size = (sizeof(Buddy_item)+sizeof(int))*num_items;
     return list_alloc_size;
 }
 
 
-Buddy_item* BuddyAllocator_createItem(BuddyAllocator* b_alloc, DATA_MAX idx){
+Buddy_item* BuddyAllocator_createItem(BuddyAllocator* b_alloc, int idx){
     
     Buddy_item* item = PoolAllocator_getBlock(b_alloc->p_alloc);
     
@@ -33,7 +33,7 @@ void BuddyAllocator_destroyItem(BuddyAllocator* b_alloc, Buddy_item* item){
 }
 
 
-void BuddyAllocator_init(BitMap_tree* tree, BuddyAllocator* b_alloc, PoolAllocator* p_alloc, uint8_t* bm_buffer, uint8_t* memory, int buffer_size, int num_levels ){
+void BuddyAllocator_init(BitMap_tree* tree, BuddyAllocator* b_alloc, PoolAllocator* p_alloc, char* bm_buffer, char* memory, int buffer_size, int num_levels ){
     
     // we need room also for level 0
     b_alloc->num_levels=num_levels;

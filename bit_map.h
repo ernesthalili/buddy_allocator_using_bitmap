@@ -28,7 +28,7 @@ typedef struct BitMap{
 
 int BitMap_getBytes(int bits);
 
-BitMap* BitMap_init(PoolAllocator* p_alloc, int buf_size, uint8_t* buffer);
+BitMap* BitMap_init(PoolAllocator* p_alloc, int buf_size, char* buffer);
 
 void BitMap_setBit(BitMap *bit_map, int bit_num, Status status);
 

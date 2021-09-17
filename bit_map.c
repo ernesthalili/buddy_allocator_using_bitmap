@@ -5,7 +5,7 @@ int BitMap_getBytes(int bits){
 }
 
 
-BitMap* BitMap_init(PoolAllocator* p_alloc, int buf_size, uint8_t* buffer){
+BitMap* BitMap_init(PoolAllocator* p_alloc, int buf_size, char* buffer){
     
     PoolAllocatorResult res =  PoolAllocator_init(p_alloc, sizeof(BitMap), 1, buffer, buf_size);
     

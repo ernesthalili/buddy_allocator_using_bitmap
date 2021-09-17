@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pool_allocator.h"
-#include "Bitmap_tree.h" 
+#include "bit_map_tree.h" 
 #include <stdint.h>
 #include <math.h>
 #include <assert.h>
