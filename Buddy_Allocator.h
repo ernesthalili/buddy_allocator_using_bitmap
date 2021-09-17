@@ -17,7 +17,7 @@ typedef struct  BuddyAllocator{
     int num_items;
     BitMap_tree* tree;
     PoolAllocator *p_alloc;
-    char* memory;
+    uint8_t* memory;
 } BuddyAllocator;
 
 
@@ -27,9 +27,9 @@ Buddy_item* BuddyAllocator_createItem(BuddyAllocator* b_alloc, int idx);
 
 void BuddyAllocator_destroyItem(BuddyAllocator* b_alloc, Buddy_item* item);
 
-void BuddyAllocator_init( BitMap_tree* tree, BuddyAllocator* b_alloc, PoolAllocator* p_alloc, char* bm_buffer, char* memory, int buffer_size, int num_levels );
+void BuddyAllocator_init( BitMap_tree* tree, BuddyAllocator* b_alloc, PoolAllocator* p_alloc, uint8_t* bm_buffer, uint8_t* memory, int buffer_size, int num_levels );
                     
-void BuddyAllocator_initSingleBuffer(BuddyAllocator* alloc, PoolAllocator* p_alloc,  char* allocator_mem, BitMap_tree* tree, int allocator_mem_size, int num_levels);
+void BuddyAllocator_initSingleBuffer(BuddyAllocator* alloc, PoolAllocator* p_alloc,  uint8_t* allocator_mem, BitMap_tree* tree, int allocator_mem_size, int num_levels);
 
 Buddy_item* BuddyAllocator_getBuddy(BuddyAllocator* alloc, int level);
 

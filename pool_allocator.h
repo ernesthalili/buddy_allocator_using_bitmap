@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+#include <stdio.h>
 
 typedef enum {
   Success=0x0,
@@ -11,7 +13,7 @@ typedef enum {
 
 typedef struct PoolAllocator{
   
-  char* buffer;        //contiguous buffer managed by the system
+  uint8_t* buffer;        //contiguous buffer managed by the system
   int*  free_list;     //list of linked objects
   int buffer_size;     //size of the buffer in bytes
 
@@ -24,7 +26,7 @@ typedef struct PoolAllocator{
 } PoolAllocator;
 
 
-PoolAllocatorResult PoolAllocator_init(PoolAllocator* allocator , int item_size, int num_items, char* memory_block, int memory_size);
+PoolAllocatorResult PoolAllocator_init(PoolAllocator* allocator , int item_size, int num_items, uint8_t* memory_block, int memory_size);
 
 void* PoolAllocator_getBlock(PoolAllocator* allocator);
 

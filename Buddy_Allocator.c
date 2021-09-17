@@ -21,7 +21,7 @@ Buddy_item* BuddyAllocator_createItem(BuddyAllocator* b_alloc, int idx){
     item->parent_idx = tree_getparent(idx);
     item->buddy_idx = tree_getbuddy(idx);
 
-    BitMap_setBit(b_alloc->tree->BitMap, idx, ALLOCATED);
+    BitMap_setBit(b_alloc->tree->mappa, idx, ALLOCATED);
     return item;
 }
 
@@ -29,11 +29,11 @@ Buddy_item* BuddyAllocator_createItem(BuddyAllocator* b_alloc, int idx){
 void BuddyAllocator_destroyItem(BuddyAllocator* b_alloc, Buddy_item* item){
     PoolAllocatorResult res = PoolAllocator_releaseBlock(b_alloc->p_alloc, item);
     assert(res==Success);
-    BitMap_setBit(b_alloc->tree->BitMap, item->idx, FREE);
+    BitMap_setBit(b_alloc->tree->mappa, item->idx, FREE);
 }
 
 
-void BuddyAllocator_init(BitMap_tree* tree, BuddyAllocator* b_alloc, PoolAllocator* p_alloc, char* bm_buffer, char* memory, int buffer_size, int num_levels ){
+void BuddyAllocator_init(BitMap_tree* tree, BuddyAllocator* b_alloc, PoolAllocator* p_alloc, uint8_t* bm_buffer, uint8_t* memory, int buffer_size, int num_levels ){
     
     // we need room also for level 0
     b_alloc->num_levels=num_levels;
@@ -50,7 +50,7 @@ void BuddyAllocator_init(BitMap_tree* tree, BuddyAllocator* b_alloc, PoolAllocat
     int list_alloc_size=(sizeof(Buddy_item)+sizeof(int))*list_items;
 
     // the buffer for the list starts where the bitmap ends
-    char *list_start= (char*)memory;
+    uint8_t *list_start= (uint8_t*)memory;
     /*    PoolAllocatorResult init_result=PoolAllocator_init(b_alloc->p_alloc,
 						     sizeof(Buddy_item),
 						     list_items,
@@ -61,7 +61,7 @@ void BuddyAllocator_init(BitMap_tree* tree, BuddyAllocator* b_alloc, PoolAllocat
     Buddy_item* item0 =BuddyAllocator_createItem(b_alloc, 0); 
 }
 
-void BuddyAllocator_initSingleBuffer(BuddyAllocator* alloc, PoolAllocator* p_alloc, char* allocator_mem, BitMap_tree* tree, int allocator_mem_size, int num_levels){
+void BuddyAllocator_initSingleBuffer(BuddyAllocator* alloc, PoolAllocator* p_alloc, uint8_t* allocator_mem, BitMap_tree* tree, int allocator_mem_size, int num_levels){
    
     //Checks if allocator and memory buffer are correctly initialized and if memory buffer was
     assert(alloc);
@@ -77,7 +77,7 @@ void BuddyAllocator_initSingleBuffer(BuddyAllocator* alloc, PoolAllocator* p_all
     const int leafs = (user_mem / min_bucket_size);
     const int total_mem_required = internal_mem_required + user_mem;
     
-    char* list_start = allocator_mem; 
+    uint8_t* list_start = allocator_mem; 
     PoolAllocatorResult init_result = PoolAllocator_init(p_alloc, sizeof(Buddy_item), total_nodes, list_start, internal_mem_required);
 
     //ia we populate the fields of the buddy allocator
@@ -162,43 +162,41 @@ void BuddyAllocator_free(BuddyAllocator* alloc, void* mem){
 void BuddyAllocator_printMetadata(BuddyAllocator* b_alloc, OUT_MODE out){
     if(out==STDOUT){
         fprintf(stdout, "\n----------------------------------------------------------------------------------------------\n");
-        fprintf(stdout ,"\tBitmap Address: %p\n", b_alloc->tree->BitMap);
+        fprintf(stdout ,"\tBitmap Address: %p\n", b_alloc->tree->mappa);
         fprintf(stdout ,"\tBuddy Allocator levels: %d\n", b_alloc->num_levels);
         fprintf(stdout ,"\tBuddy Allocator items: %d\n", b_alloc->num_items);
         fprintf(stdout ,"\tBuddy Allocator min bucket size: %d\n", b_alloc->min_bucket_size);
         fprintf(stdout ,"\tMem alloc size: %d\n", b_alloc->buffer_size);
         fprintf(stdout ,"\tMem address start: %p\n", b_alloc->memory);
         fprintf(stdout ,"\tMem address end: %p\n", (b_alloc->memory)+b_alloc->buffer_size);
-        Bitmap_print(b_alloc->tree->BitMap, out);
+        Bitmap_print(b_alloc->tree->mappa, out);
         fprintf(stdout, "\n----------------------------------------------------------------------------------------------\n");
     }
     if(out==F_CONCAT){
-        FILE* f = fopen("OUT/Logs/allocator_metadata.txt", "a");
-        fprintf(f, "\n----------------------------------------------------------------------------------------------\n");
-        fprintf(f,"\tBitmap Address: %p\n", b_alloc->tree->BitMap);
-        fprintf(f,"\tBuddy Allocator levels: %d\n", b_alloc->num_levels);
-        fprintf(f,"\tBuddy Allocator items: %d\n", b_alloc->num_items);
-        fprintf(f,"\tBuddy Allocator min bucket size: %d\n", b_alloc->min_bucket_size);
-        fprintf(f,"\tMem alloc size: %d\n", b_alloc->buffer_size);
-        fprintf(f,"\tMem address start: %p\n", b_alloc->memory);
-        fprintf(f,"\tMem address end: %p\n", (b_alloc->memory)+b_alloc->buffer_size);
-        Bitmap_print(b_alloc->tree->BitMap, out);
-        fprintf(f, "\n----------------------------------------------------------------------------------------------\n");
-        fclose(f);
+        printf("\n----------------------------------------------------------------------------------------------\n");
+        printf("\tBitmap Address: %p\n", b_alloc->tree->mappa);
+        printf("\tBuddy Allocator levels: %d\n", b_alloc->num_levels);
+        printf("\tBuddy Allocator items: %d\n", b_alloc->num_items);
+        printf("\tBuddy Allocator min bucket size: %d\n", b_alloc->min_bucket_size);
+        printf("\tMem alloc size: %d\n", b_alloc->buffer_size);
+        printf("\tMem address start: %p\n", b_alloc->memory);
+        printf("\tMem address end: %p\n", (b_alloc->memory)+b_alloc->buffer_size);
+        Bitmap_print(b_alloc->tree->mappa, out);
+        printf("\n----------------------------------------------------------------------------------------------\n");
     }
     if(out==F_WRITE){
-        FILE* f = fopen("OUT/Logs/allocator_metadata.txt", "w");
-        fprintf(f, "\n----------------------------------------------------------------------------------------------\n");
-        fprintf(f,"\tBitmap Address: %p\n", b_alloc->tree->BitMap);
-        fprintf(f,"\tBuddy Allocator levels: %d\n", b_alloc->num_levels);
-        fprintf(f,"\tBuddy Allocator items: %d\n", b_alloc->num_items);
-        fprintf(f,"\tBuddy Allocator min bucket size: %d\n", b_alloc->min_bucket_size);
-        fprintf(f,"\tMem alloc size: %d\n", b_alloc->buffer_size);
-        fprintf(f,"\tMem address start: %p\n", b_alloc->memory);
-        fprintf(f,"\tMem address end: %p\n", (b_alloc->memory)+b_alloc->buffer_size);
-        Bitmap_print(b_alloc->tree->BitMap, F_CONCAT);
-        fprintf(f, "\n----------------------------------------------------------------------------------------------\n");
-        fclose(f);
+		
+        printf("\n----------------------------------------------------------------------------------------------\n");
+        printf("\tBitmap Address: %p\n", b_alloc->tree->mappa);
+        printf("\tBuddy Allocator levels: %d\n", b_alloc->num_levels);
+        printf("\tBuddy Allocator items: %d\n", b_alloc->num_items);
+        printf("\tBuddy Allocator min bucket size: %d\n", b_alloc->min_bucket_size);
+        printf("\tMem alloc size: %d\n", b_alloc->buffer_size);
+        printf("\tMem address start: %p\n", b_alloc->memory);
+        printf("\tMem address end: %p\n", (b_alloc->memory)+b_alloc->buffer_size);
+        Bitmap_print(b_alloc->tree->mappa, F_CONCAT);
+        printf( "\n----------------------------------------------------------------------------------------------\n");
+        
     }
 }
 

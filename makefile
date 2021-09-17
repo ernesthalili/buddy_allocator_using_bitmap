@@ -13,6 +13,13 @@ TEST_DIR=Tests/
 
 BINS=$(BINS_DIR)BM_test $(BINS_DIR)Bud_test
 
+test:
+	$(CC) $(CCOPTS) -o test Main.c bit_map.* Buddy_Allocator.* pool_allocator.* bit_map_tree.* $(LIBS)
+	./test
+	
+clean_test:
+	rm test    
+
 buddy:
 	$(CC) $(CCOPTS) -o Bud_test Main.c bit_map.* Buddy_Allocator.* pool_allocator.* bit_map_tree.* $(LIBS)
 	./Bud_test

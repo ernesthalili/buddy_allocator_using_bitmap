@@ -1,11 +1,7 @@
 #include "bit_map.h"
 
-#include <stdint.h>
-#include <math.h>
-#include <stdio.h>
-
 typedef struct Bitmap_tree{
-    BitMap* BitMap;
+    BitMap* mappa;
     int levels;
     int total_nodes;
     int leaf_num;

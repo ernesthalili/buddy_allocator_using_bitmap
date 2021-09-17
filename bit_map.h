@@ -28,11 +28,11 @@ typedef struct BitMap{
 
 int BitMap_getBytes(int bits);
 
-BitMap* BitMap_init(PoolAllocator* p_alloc, int buf_size, char* buffer);
+BitMap* BitMap_init(PoolAllocator* p_alloc, int buf_size, uint8_t* buffer);
 
 void BitMap_setBit(BitMap *bit_map, int bit_num, Status status);
 
-char BitMap_bit( BitMap *bit_map, int bit_num);
+uint8_t BitMap_bit( BitMap *bit_map, int bit_num);
 
 void Bitmap_print(BitMap *bit_map, OUT_MODE out_mode);
 

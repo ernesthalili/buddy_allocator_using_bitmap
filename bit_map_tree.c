@@ -1,3 +1,7 @@
+#include <stdint.h>
+#include <math.h>
+#include <stdio.h>
+
 #include "bit_map_tree.h"
 
 
@@ -18,11 +22,11 @@ int tree_first_node_level(int idx){
 
 int tree_first_free_node_level(BitMap_tree* tree,int level){
     if(level == 0) {
-        if(BitMap_bit(tree->BitMap,0) ==ALLOCATED)return -1;
+        if(BitMap_bit(tree->mappa,0) ==ALLOCATED)return -1;
         else return 0;
     }
     for(int i=pow(2, level+1)-1;i>0;--i){
-        if(BitMap_bit(tree->BitMap, i)==FREE) return i+1;
+        if(BitMap_bit(tree->mappa, i)==FREE) return i+1;
     }
     return -1;
 }
@@ -41,13 +45,13 @@ int tree_getparent(int idx){
 
 int tree_buddiesOnLevel(BitMap_tree *tree, int level){
     if(level == 0){
-        if (BitMap_bit(tree->BitMap, 0)) return 1;
+        if (BitMap_bit(tree->mappa, 0)) return 1;
         else return 0;
     }
     
     if(level == 1){
-        if (BitMap_bit(tree->BitMap, 1)==ALLOCATED && BitMap_bit(tree->BitMap, 2)==ALLOCATED) return 2;
-        if (BitMap_bit(tree->BitMap, 1)==ALLOCATED || BitMap_bit(tree->BitMap, 2)==ALLOCATED) return 1;
+        if (BitMap_bit(tree->mappa, 1)==ALLOCATED && BitMap_bit(tree->mappa, 2)==ALLOCATED) return 2;
+        if (BitMap_bit(tree->mappa, 1)==ALLOCATED || BitMap_bit(tree->mappa, 2)==ALLOCATED) return 1;
         else return 0;
     }
     
@@ -56,39 +60,41 @@ int tree_buddiesOnLevel(BitMap_tree *tree, int level){
     int ret = 0;
     
     for(int i = start_idx; i<end_idx; i++){
-        if(BitMap_bit(tree->BitMap, i)==ALLOCATED)ret++;
+        if(BitMap_bit(tree->mappa, i)==ALLOCATED)ret++;
     }
     
     return ret;
 }
 
 void tree_print(BitMap_tree *tree, OUT_MODE out_mode){
+	
+	  //printf("Prova\n");
     if(out_mode==F_WRITE){
-        FILE* f = fopen("OUT/Logs/bitmap_tree.txt", "w");
-        fprintf(f, "\n----------------------------------------------------------------------------------------------\n");
-        fprintf(f, "Tree Metadata:\n");
-        fprintf(f, "%d bits\t%d bytes\n", tree->BitMap->num_bits, tree->BitMap->buffer_size);
-        fprintf(f, "%p start\t%p end\n", tree->BitMap->Buf, tree->BitMap->end_Buf);
+        
+        printf("\n----------------------------------------------------------------------------------------------\n");
+        printf("Tree Metadata:\n");
+        printf("%d bits\t%d bytes\n", tree->mappa->num_bits, tree->mappa->buffer_size);
+        printf("%p start\t%p end\n", tree->mappa->Buf, tree->mappa->end_Buf);
         for (int i = 0; i < tree->levels; i++){
-            fprintf(f,"Level %d: %d buddies\t",i, tree_buddiesOnLevel(tree, i));
-            fprintf(f,"First_free: %d\n",tree_first_free_node_level(tree, i));  
+            printf("Level %d: %d buddies\t",i, tree_buddiesOnLevel(tree, i));
+            printf("First_free: %d\n",tree_first_free_node_level(tree, i));  
         }
-        fprintf(f, "\n");
-        fprintf(f, "Bitmap STATUS:\n");
+        printf("\n");
+        printf("Bitmap STATUS:\n");
         for (int i = 0; i < tree->levels; i++){
 		    for (int j = 0; j < pow(2,i);j++){
-			    fprintf(f, "%x",BitMap_bit(tree->BitMap,pow(2,i)+j));
+			    printf("%x",BitMap_bit(tree->mappa,pow(2,i)+j));
 		    }
-		fprintf(f,"\n");
+		printf("\n");
 	    }
-        fprintf(f, "\n----------------------------------------------------------------------------------------------\n");
-        fclose(f);
+        printf("\n----------------------------------------------------------------------------------------------\n");
+       
     }
     if(out_mode==STDOUT){
         fprintf(stdout, "\n----------------------------------------------------------------------------------------------\n");
         fprintf(stdout,"Tree Metadata:\n"); 
-        fprintf(stdout,"%d bits\t%d bytes\n",tree->BitMap->num_bits, tree->BitMap->buffer_size);
-        fprintf(stdout, "%p start\t%p end\n", tree->BitMap->Buf, tree->BitMap->end_Buf);
+        fprintf(stdout,"%d bits\t%d bytes\n",tree->mappa->num_bits, tree->mappa->buffer_size);
+        fprintf(stdout, "%p start\t%p end\n", tree->mappa->Buf, tree->mappa->end_Buf);
         for (int i = 0; i < tree->levels; i++){
             fprintf(stdout,"Level %d: %d buddies\t",i, tree_buddiesOnLevel(tree, i));
             fprintf(stdout,"First_free: %d\n",tree_first_free_node_level(tree, i));
@@ -97,32 +103,33 @@ void tree_print(BitMap_tree *tree, OUT_MODE out_mode){
         fprintf(stdout,"Bitmap STATUS:\n");
         for (int i = 0; i < tree->levels; i++){
 		    for (int j = 0; j < pow(2,i);j++){
-			    fprintf(stdout, "%x",BitMap_bit(tree->BitMap,pow(2,i)+j));
+			    fprintf(stdout, "%x",BitMap_bit(tree->mappa,pow(2,i)+j));
 		    }
 		fprintf(stdout,"\n");
 	    }
         fprintf(stdout,"\n----------------------------------------------------------------------------------------------\n");
     }
     if(out_mode==F_CONCAT){
-        FILE* f = fopen("OUT/Logs/bitmap_tree.txt", "a");
-        fprintf(f, "\n----------------------------------------------------------------------------------------------\n");
-        fprintf(f, "Tree Metadata:\n");
-        fprintf(f, "%d bits\t%d bytes\n",  tree->BitMap->num_bits, tree->BitMap->buffer_size);
-        fprintf(f, "%p start\t%p end\n", tree->BitMap->Buf, tree->BitMap->end_Buf);
+
+        printf("\n----------------------------------------------------------------------------------------------\n");
+        printf("Tree Metadata:\n");
+      
+        printf("%d bits\t%d bytes\n",  tree->mappa->num_bits, tree->mappa->buffer_size);
+        printf("%p start\t%p end\n", tree->mappa->Buf, tree->mappa->end_Buf);
         for (int i = 0; i < tree->levels; i++){
-            fprintf(f,"Level %d: %d buddies\t",i, tree_buddiesOnLevel(tree, i));
-            fprintf(f,"First_free: %d\n",tree_first_free_node_level(tree, i));
+            printf("Level %d: %d buddies\t",i, tree_buddiesOnLevel(tree, i));
+            printf("First_free: %d\n",tree_first_free_node_level(tree, i));
         }
-        fprintf(f,"\n");
-        fprintf(f, "Bitmap STATUS:\n");
+        printf("\n");
+        printf("Bitmap STATUS:\n");
         for (int i = 0; i < tree->levels; i++){
 		    for (int j = 0; j < pow(2,i);j++){
-			    fprintf(f,"%x",BitMap_bit(tree->BitMap,(pow(2,i)+j)-1));
+			    printf("%x",BitMap_bit(tree->mappa,(pow(2,i)+j)-1));
 		    }
-		fprintf(f,"\n");
+		printf("\n");
 	    }
-        fprintf(f, "\n----------------------------------------------------------------------------------------------\n");
-        fclose(f);
+        printf("\n----------------------------------------------------------------------------------------------\n");
+       
     }
 }
 
@@ -135,7 +142,7 @@ int tree_leafs(int levels){
 }
 
 BitMap_tree* BitMap_tree_init(BitMap_tree *tree, BitMap* b, int levels){
-    tree->BitMap = b;
+    tree->mappa = b;
     tree->leaf_num = tree_leafs(levels);
     tree->levels = levels;
     tree->total_nodes = tree_nodes(levels);
