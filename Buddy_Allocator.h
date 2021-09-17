@@ -39,5 +39,5 @@ void* BuddyAllocator_malloc(BuddyAllocator* alloc, int size);
 
 void BuddyAllocator_free(BuddyAllocator* alloc, void* mem);
 
-void BuddyAllocator_printMetadata(BuddyAllocator* alloc, OUT_MODE out);
+void BuddyAllocator_printMetadata(BuddyAllocator* alloc);
 

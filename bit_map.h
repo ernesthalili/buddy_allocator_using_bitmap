@@ -7,19 +7,15 @@
 #include <math.h>
 
 
+// I possibili stati che possono avere i bit
 typedef enum Status{
     ALLOCATED = 0x01,
     FREE = 0x00
 }Status;
 
-typedef enum OUT_MODE{
-    STDOUT = 0,  //stdout
-    F_WRITE = 1, //fprintf w
-    F_CONCAT = 2 //fprintf a
-} OUT_MODE;
 
 typedef struct BitMap{
-    uint8_t* Buf; //Bitmap will be stored here
+    uint8_t* Buf; 
     uint8_t* end_Buf;
     int buffer_size;
     int num_bits;
@@ -34,7 +30,7 @@ void BitMap_setBit(BitMap *bit_map, int bit_num, Status status);
 
 uint8_t BitMap_bit( BitMap *bit_map, int bit_num);
 
-void Bitmap_print(BitMap *bit_map, OUT_MODE out_mode);
+void Bitmap_print(BitMap *bit_map);
 
 
 

@@ -2,7 +2,7 @@
 #include <string.h>
 
 #define LEVELS 9
-//Buffer for bitmap
+
 #define BM_BUF_SIZE 512// 512 bit Bitmap
 #define BM_SIZE 1*(BM_BUF_SIZE + sizeof(BitMap)) //Only 1 bitmap to save
 uint8_t BM_buffer[BM_BUF_SIZE];
@@ -26,16 +26,15 @@ int main(int argc, char const *argv[])
 	
 	
     BitMap_tree tree = {b, LEVELS, tree_nodes(LEVELS), tree_leafs(LEVELS)};
-   
     
-    tree_print(&tree, F_WRITE);
+    tree_print(&tree);
     
     BuddyAllocator_initSingleBuffer(&BAllocator, &BA_Pallocator, BA_memory, &tree, BALLOC_MEM_SIZE, LEVELS);
 	
-    tree_print(&tree, F_CONCAT);
+    tree_print(&tree);
     
     
-    BuddyAllocator_printMetadata(&BAllocator, F_WRITE);
+    BuddyAllocator_printMetadata(&BAllocator);
 
     return 0;
 }

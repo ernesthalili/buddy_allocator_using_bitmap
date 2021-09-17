@@ -4,16 +4,33 @@ LIBS=-lm
 CC=gcc
 
 
-test:
-	$(CC) $(CCOPTS) -o test Main.c bit_map.* Buddy_Allocator.* pool_allocator.* bit_map_tree.* $(LIBS)
-	./test
+main:
+	$(CC) $(CCOPTS) -o main Main.c bit_map.* Buddy_Allocator.* pool_allocator.* bit_map_tree.* $(LIBS)
+	./main
 	
-test_vg:
-	$(CC) $(CCOPTS) -o test_vg Main.c bit_map.*  Buddy_Allocator.* pool_allocator.* bit_map_tree.* $(LIBS)
-	valgrind $(VGOPTS)--log-file=bud-valgrind-out.txt \./test_vg
+main_vg:
+	$(CC) $(CCOPTS) -o main_vg Main.c bit_map.*  Buddy_Allocator.* pool_allocator.* bit_map_tree.* $(LIBS)
+	valgrind $(VGOPTS)--log-file=main_valgrind_out.txt \./main_vg
 
+test:
+	$(CC) $(CCOPTS) -o test Tests/Bitmap_test.c bit_map.* Buddy_Allocator.* pool_allocator.* bit_map_tree.* $(LIBS)
+	./test	
+
+test_vg:
+	$(CC) $(CCOPTS) -o test_vg Tests/Bitmap_test.c bit_map.*  Buddy_Allocator.* pool_allocator.* bit_map_tree.* $(LIBS)
+	valgrind $(VGOPTS)--log-file=test_valgrind_out.txt \./test_vg
+
+clean_main:
+	rm main
+	
+clean_main_vg:
+	rm main_vg 
+	rm main_valgrind_out.txt  
 	
 clean_test:
 	rm test
-	rm test_vg    
+
+clean_test_vg:
+	rm test_vg 
+	rm test_valgrind_out.txt
 

@@ -16,29 +16,33 @@ int main(int argc, char const *argv[]){
 
 	BitMap *b = BitMap_init(&PAllocator, BUF_SIZE, memory);
 
-	for(DATA_MAX i = 0; i<BUF_SIZE; i++){
+	for(int i = 0; i<BUF_SIZE; i++){
 		BitMap_setBit(b, i, ALLOCATED);
 	}
-	Bitmap_print(b,F_WRITE);
+	Bitmap_print(b);
 
-	for(DATA_MAX j = 0; j<BUF_SIZE; j++){
+	for(int j = 0; j<BUF_SIZE; j++){
 		BitMap_setBit(b, j, FREE);
 	}
-	Bitmap_print(b,F_CONCAT);
+	Bitmap_print(b);
 
 	BitMap_setBit(b, 7, ALLOCATED);
-	Bitmap_print(b,F_CONCAT);
+	Bitmap_print(b);
+	
 	BitMap_setBit(b, 7, FREE);
-	Bitmap_print(b, F_CONCAT);
+	Bitmap_print(b);
 
-	BitMap_tree tree; BitMap_tree_init(&tree, b, 9);
-	tree_print(&tree, F_CONCAT);
+	BitMap_tree tree;
+	BitMap_tree_init(&tree, b, 9);
+	
+	tree_print(&tree);
 
-	for(DATA_MAX j = 0; j<BUF_SIZE; j++){
+	for(int j = 0; j<BUF_SIZE; j++){
 		if((j%2))BitMap_setBit(b, j, FREE);
 		else BitMap_setBit(b, j, ALLOCATED);
 	}
-	tree_print(&tree, F_CONCAT);
+	
+	tree_print(&tree);
 
 	PoolAllocator_releaseBlock(&PAllocator, b);
 

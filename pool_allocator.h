@@ -13,16 +13,16 @@ typedef enum {
 
 typedef struct PoolAllocator{
   
-  uint8_t* buffer;        //contiguous buffer managed by the system
-  int*  free_list;     //list of linked objects
-  int buffer_size;     //size of the buffer in bytes
+  uint8_t* buffer;     // memoria contigua
+  int*  free_list;     // lista collegata di oggetti
+  int buffer_size;     // dimensione del buffer
 
-  int size;            //number of free blocks
-  int size_max;        //maximum number of blocks
-  int item_size;       //size of a block
+  int size;            // numero dei blocchi liberi
+  int size_max;        // numero massimo di blocchi
+  int item_size;       // dimensione di un blocco
   
-  int first_idx;       //pointer to the first bucket
-  int bucket_size;     // size of a bucket
+  int first_idx;       // puntatore al primo bucket
+  int bucket_size;     // dimensione bucket
 } PoolAllocator;
 
 
