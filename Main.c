@@ -13,8 +13,7 @@ uint8_t BA_memory[BALLOC_MEM_SIZE];
 
 BuddyAllocator BAllocator;
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
     PoolAllocator BM_PAllocator, BA_Pallocator; 
     
     //Sets all bits of bitmap and buddy allocator memory to 0

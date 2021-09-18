@@ -1,16 +1,16 @@
 #include "Buddy_Allocator.h"
 
 
-int BuddyAllocator_calcSize(int num_levels){
-		
+int BuddyAllocator_calcSize(int num_levels)
+{
     int num_items=(1<<(num_levels+1));
     int list_alloc_size = (sizeof(Buddy_item)+sizeof(int))*num_items;
     return list_alloc_size;
 }
 
 
-Buddy_item* BuddyAllocator_createItem(BuddyAllocator* b_alloc, int idx){
-    
+Buddy_item* BuddyAllocator_createItem(BuddyAllocator* b_alloc, int idx)
+{
     Buddy_item* item = PoolAllocator_getBlock(b_alloc->p_alloc);
     
     item->idx=idx;
@@ -27,15 +27,16 @@ Buddy_item* BuddyAllocator_createItem(BuddyAllocator* b_alloc, int idx){
 }
 
 
-void BuddyAllocator_destroyItem(BuddyAllocator* b_alloc, Buddy_item* item){
+void BuddyAllocator_destroyItem(BuddyAllocator* b_alloc, Buddy_item* item)
+{
     PoolAllocatorResult res = PoolAllocator_releaseBlock(b_alloc->p_alloc, item);
     assert(res==Success);
     BitMap_setBit(b_alloc->tree->mappa, item->idx, FREE);
 }
 
 
-void BuddyAllocator_init(BitMap_tree* tree, BuddyAllocator* b_alloc, PoolAllocator* p_alloc, uint8_t* bm_buffer, uint8_t* memory, int buffer_size, int num_levels ){
-    
+void BuddyAllocator_init(BitMap_tree* tree, BuddyAllocator* b_alloc, PoolAllocator* p_alloc, uint8_t* bm_buffer, uint8_t* memory, int buffer_size, int num_levels )
+{
     b_alloc->num_levels=num_levels;
     b_alloc->memory=memory;
     b_alloc->tree = tree;
@@ -56,8 +57,8 @@ void BuddyAllocator_init(BitMap_tree* tree, BuddyAllocator* b_alloc, PoolAllocat
     Buddy_item* item0 =BuddyAllocator_createItem(b_alloc, 0); 
 }
 
-void BuddyAllocator_initSingleBuffer(BuddyAllocator* alloc, PoolAllocator* p_alloc, uint8_t* allocator_mem, BitMap_tree* tree, int allocator_mem_size, int num_levels){
-   
+void BuddyAllocator_initSingleBuffer(BuddyAllocator* alloc, PoolAllocator* p_alloc, uint8_t* allocator_mem, BitMap_tree* tree, int allocator_mem_size, int num_levels)
+{
     // Controlla se il buffer e la memoria sono inizializzati corretamente
     assert(alloc);
     assert(allocator_mem_size!=0 && allocator_mem);
@@ -88,25 +89,30 @@ void BuddyAllocator_initSingleBuffer(BuddyAllocator* alloc, PoolAllocator* p_all
     Buddy_item *item = BuddyAllocator_createItem(alloc, 0);
 }
 
-Buddy_item* BuddyAllocator_getBuddy(BuddyAllocator* b_alloc, int level){
-
+Buddy_item* BuddyAllocator_getBuddy(BuddyAllocator* b_alloc, int level)
+{
     if(level<0) return 0;
     assert(level<=b_alloc->num_levels);
     
     // Controlla se il buddy esiste, altrimenti passa al livello precedente 
-    if(!tree_buddiesOnLevel(b_alloc->tree, level)){
+    if(!tree_buddiesOnLevel(b_alloc->tree, level))
+    {
         Buddy_item* parent = BuddyAllocator_getBuddy(b_alloc, level-1);
         if(!parent) return NULL;
     }
-    if(tree_buddiesOnLevel(b_alloc->tree, level)){
+    
+    if(tree_buddiesOnLevel(b_alloc->tree, level))
+    {
         printf("Buddies on level:\n");
         int idx = tree_first_free_node_level(b_alloc->tree, level);
         return (Buddy_item*)b_alloc->memory+(idx-(1<<tree_level(idx)))*b_alloc->min_bucket_size;
     }
+    
     return(0);
 }
 
-void BuddyAllocator_releaseBuddy(BuddyAllocator* alloc, Buddy_item* item){
+void BuddyAllocator_releaseBuddy(BuddyAllocator* alloc, Buddy_item* item)
+{
     Buddy_item* parent = (Buddy_item*) alloc->memory[item->parent_idx];
     Buddy_item* buddy = (Buddy_item*) alloc->memory[item->buddy_idx];
     
@@ -123,8 +129,8 @@ void BuddyAllocator_releaseBuddy(BuddyAllocator* alloc, Buddy_item* item){
 }
 
 
-void* BuddyAllocator_malloc(BuddyAllocator* alloc, int size){
-    
+void* BuddyAllocator_malloc(BuddyAllocator* alloc, int size)
+{
     int mem_size = (1<<alloc->num_levels)*alloc->min_bucket_size;
     int level = tree_level(mem_size/(size+8));
     if(level>alloc->num_levels) level = alloc->num_levels;
@@ -138,8 +144,8 @@ void* BuddyAllocator_malloc(BuddyAllocator* alloc, int size){
     return buddy->memory+8;
 }
 
-void BuddyAllocator_free(BuddyAllocator* alloc, void* mem){
-
+void BuddyAllocator_free(BuddyAllocator* alloc, void* mem)
+{
     char* p = (char*) mem; p-=8;
     Buddy_item* buddy_ptr = (Buddy_item*)p;
     Buddy_item* buddy = buddy_ptr;
@@ -147,7 +153,8 @@ void BuddyAllocator_free(BuddyAllocator* alloc, void* mem){
 }
 
 
-void BuddyAllocator_printMetadata(BuddyAllocator* b_alloc){
+void BuddyAllocator_printMetadata(BuddyAllocator* b_alloc)
+{
         printf("\n----------------------------------------------------------------------------------------------\n");
         printf("\tBitmap Address: %p\n", b_alloc->tree->mappa);
         printf("\tBuddy Allocator levels: %d\n", b_alloc->num_levels);

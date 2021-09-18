@@ -10,7 +10,8 @@
 
 #define MAX_LEVELS 16
 
-typedef struct  BuddyAllocator{
+typedef struct  BuddyAllocator
+{
     int num_levels;
     int buffer_size;
     int min_bucket_size;

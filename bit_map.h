@@ -8,13 +8,15 @@
 
 
 // I possibili stati che possono avere i bit
-typedef enum Status{
+typedef enum Status
+{
     ALLOCATED = 0x01,
     FREE = 0x00
 }Status;
 
 
-typedef struct BitMap{
+typedef struct BitMap
+{
     uint8_t* Buf; 
     uint8_t* end_Buf;
     int buffer_size;

@@ -1,7 +1,8 @@
 #include "bit_map.h"
 
 // Albero che descrive una BitMap
-typedef struct Bitmap_tree{
+typedef struct Bitmap_tree
+{
     BitMap* mappa;
     int levels;
     int total_nodes;
@@ -9,7 +10,8 @@ typedef struct Bitmap_tree{
 }BitMap_tree;
 
 
-typedef struct Buddy_item{
+typedef struct Buddy_item
+{
     char* memory;
     BitMap_tree* tree;
     int idx;

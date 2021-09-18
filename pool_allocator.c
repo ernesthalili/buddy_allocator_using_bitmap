@@ -12,12 +12,13 @@ static const char* PoolAllocator_strerrors[]=
    0
   };
   
-const char* PoolAllocator_strerror(PoolAllocatorResult result) {
+const char* PoolAllocator_strerror(PoolAllocatorResult result) 
+{
   return PoolAllocator_strerrors[-result];
 }
 
-PoolAllocatorResult PoolAllocator_init(PoolAllocator* a, int item_size, int num_items, uint8_t* memory_block, int memory_size) {
-
+PoolAllocatorResult PoolAllocator_init(PoolAllocator* a, int item_size, int num_items, uint8_t* memory_block, int memory_size) 
+{
   // Si controlla se la memoria e' sufficiente per il bookkeeping
   int requested_size= num_items*(item_size+sizeof(int));
   if (memory_size<requested_size)
@@ -32,7 +33,8 @@ PoolAllocatorResult PoolAllocator_init(PoolAllocator* a, int item_size, int num_
   a->free_list= (int*)(memory_block+item_size*num_items); // la parte finale per il bookkeeping
 
  
-  for (int i=0; i<a->size-1; ++i){
+  for (int i=0; i<a->size-1; ++i)
+  {
     a->free_list[i]=i+1;
   }
   // settiamo a NULL l'ultimo elemento della lista
@@ -42,7 +44,8 @@ PoolAllocatorResult PoolAllocator_init(PoolAllocator* a, int item_size, int num_
   return Success;
 }
 
-void* PoolAllocator_getBlock(PoolAllocator* a) {
+void* PoolAllocator_getBlock(PoolAllocator* a) 
+{
   if (a->first_idx==-1)
       return 0;
 
@@ -60,8 +63,8 @@ void* PoolAllocator_getBlock(PoolAllocator* a) {
   return block_address;
 }
 
-PoolAllocatorResult PoolAllocator_releaseBlock(PoolAllocator* a, void* block_){
-  
+PoolAllocatorResult PoolAllocator_releaseBlock(PoolAllocator* a, void* block_)
+{
   uint8_t* block=(uint8_t*) block_;
   int offset=block - a->buffer;
 

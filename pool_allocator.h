@@ -3,7 +3,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
-typedef enum {
+typedef enum 
+{
   Success=0x0,
   NotEnoughMemory=-1,
   UnalignedFree=-2,
@@ -11,8 +12,8 @@ typedef enum {
   DoubleFree=-4
 } PoolAllocatorResult;
 
-typedef struct PoolAllocator{
-  
+typedef struct PoolAllocator
+{ 
   uint8_t* buffer;     // memoria contigua
   int*  free_list;     // lista collegata di oggetti
   int buffer_size;     // dimensione del buffer
