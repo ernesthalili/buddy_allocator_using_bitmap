@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 
-#define BUF_SIZE 1024*8  // 1 KByte Bitmap
+#define BUF_SIZE 512 // 512 bit Bitmap
 #define MEM_SIZE (BUF_SIZE + sizeof(BitMap)) //Only 1 bitmap to save
 
 uint8_t buffer[MEM_SIZE];
@@ -26,10 +26,10 @@ int main(int argc, char const *argv[]){
 	}
 	Bitmap_print(b);
 
-	BitMap_setBit(b, 7, ALLOCATED);
+	BitMap_setBit(b, 3, ALLOCATED);
 	Bitmap_print(b);
 	
-	BitMap_setBit(b, 7, FREE);
+	BitMap_setBit(b, 3, FREE);
 	Bitmap_print(b);
 
 	BitMap_tree tree;

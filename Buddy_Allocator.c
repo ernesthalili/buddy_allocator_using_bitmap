@@ -40,7 +40,6 @@ void BuddyAllocator_init(BitMap_tree* tree, BuddyAllocator* b_alloc, PoolAllocat
     b_alloc->num_levels=num_levels;
     b_alloc->memory=memory;
     b_alloc->tree = tree;
-    b_alloc->min_bucket_size; //Valore non inizzializata
     b_alloc->buffer_size = buffer_size;
     b_alloc->num_items = 1<<(num_levels+1);
     assert (num_levels<MAX_LEVELS);

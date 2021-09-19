@@ -10,6 +10,7 @@ int BitMap_getBytes(int bits)
 BitMap* BitMap_init(PoolAllocator* p_alloc, int buf_size, uint8_t* buffer)
 {  
     PoolAllocatorResult res =  PoolAllocator_init(p_alloc, sizeof(BitMap), 1, buffer, buf_size);
+    assert(res == 0);
     
     BitMap* bit_map = (BitMap*) PoolAllocator_getBlock(p_alloc);
     assert(buffer!=NULL);
